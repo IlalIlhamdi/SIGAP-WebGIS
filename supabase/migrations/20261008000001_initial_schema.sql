@@ -162,23 +162,39 @@ ALTER TABLE data_sources ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
 -- Public READ access to official information
+DROP POLICY IF EXISTS "Public Read Administrative Areas" ON administrative_areas;
 CREATE POLICY "Public Read Administrative Areas" ON administrative_areas FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Flood Hazard" ON flood_hazard;
 CREATE POLICY "Public Read Flood Hazard" ON flood_hazard FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Flood Events" ON flood_events;
 CREATE POLICY "Public Read Flood Events" ON flood_events FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Evacuation Points" ON evacuation_points;
 CREATE POLICY "Public Read Evacuation Points" ON evacuation_points FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Public Facilities" ON public_facilities;
 CREATE POLICY "Public Read Public Facilities" ON public_facilities FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Population Stats" ON population_statistics;
 CREATE POLICY "Public Read Population Stats" ON population_statistics FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Data Sources" ON data_sources;
 CREATE POLICY "Public Read Data Sources" ON data_sources FOR SELECT USING (true);
 
 -- Public can submit reports
+DROP POLICY IF EXISTS "Public Insert Reports" ON flood_reports;
 CREATE POLICY "Public Insert Reports" ON flood_reports FOR INSERT WITH CHECK (true);
 
 -- Public can only view non-sensitive report fields (reporter_phone and name masked)
+DROP POLICY IF EXISTS "Public Read Verified Reports" ON flood_reports;
 CREATE POLICY "Public Read Verified Reports" ON flood_reports FOR SELECT USING (
     status IN ('Diverifikasi', 'Ditindaklanjuti', 'Menunggu Verifikasi')
 );
 
 -- Officer and Admin can update report statuses
+DROP POLICY IF EXISTS "Officer Verify Reports" ON flood_reports;
 CREATE POLICY "Officer Verify Reports" ON flood_reports FOR UPDATE USING (
     EXISTS (
         SELECT 1 FROM profiles 
