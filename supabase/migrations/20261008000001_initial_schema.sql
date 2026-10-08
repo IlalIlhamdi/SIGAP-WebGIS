@@ -186,3 +186,14 @@ CREATE POLICY "Officer Verify Reports" ON flood_reports FOR UPDATE USING (
         AND profiles.role IN ('officer', 'admin')
     )
 );
+
+-- ====================================================================
+-- GRANT ROLES PERMISSION (Required for Supabase PostgREST API / anon access)
+-- ====================================================================
+GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon, authenticated;
+GRANT INSERT ON public.flood_reports TO anon, authenticated;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO anon, authenticated;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO anon, authenticated;
+
