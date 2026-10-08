@@ -1,0 +1,322 @@
+{
+  "type": "FeatureCollection",
+  "name": "Titik Evakuasi Terverifikasi Kabupaten Aceh Utara",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "evac-1",
+      "properties": {
+        "name": "Gedung Serbaguna Landing & Kantor Bupati Aceh Utara",
+        "kecamatan": "Lhoksukon",
+        "coord": [
+          97.3248,
+          5.0475
+        ],
+        "address": "Kompleks Perkantoran Landing, Kec. Lhoksukon",
+        "capacity_persons": 2500,
+        "facility_type": "Gedung Pemerintahan & Aula Publik",
+        "elevation_m": 14,
+        "verification_status": "TERVERIFIKASI",
+        "facilities_available": [
+          "Dapur Umum",
+          "Posko Medis",
+          "MCK Komunal",
+          "Area Parkir Logistik",
+          "Listrik Genset"
+        ],
+        "source": "BPBD Kabupaten Aceh Utara — Renkon Banjir",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.3248,
+          5.0475
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "evac-2",
+      "properties": {
+        "name": "Masjid Agung Baiturrahim Lhoksukon",
+        "kecamatan": "Lhoksukon",
+        "coord": [
+          97.3195,
+          5.0448
+        ],
+        "address": "Pusat Kota Lhoksukon, Kec. Lhoksukon",
+        "capacity_persons": 1200,
+        "facility_type": "Tempat Ibadah & Halaman Tinggi",
+        "elevation_m": 12,
+        "verification_status": "TERVERIFIKASI",
+        "facilities_available": [
+          "Tempat Istirahat Bertingkat",
+          "Air Bersih",
+          "MCK",
+          "Akses Jalan Utama"
+        ],
+        "source": "BPBD Kabupaten Aceh Utara — Renkon Banjir",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.3195,
+          5.0448
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "evac-3",
+      "properties": {
+        "name": "Meunasah Dayah Babussalam Matangkuli",
+        "kecamatan": "Matangkuli",
+        "coord": [
+          97.2635,
+          5.0112
+        ],
+        "address": "Blang Kuta / Ceumpeudak, Kec. Matangkuli",
+        "capacity_persons": 850,
+        "facility_type": "Balai Komunitas & Kompleks Dayah",
+        "elevation_m": 16,
+        "verification_status": "TERVERIFIKASI",
+        "facilities_available": [
+          "Aula Pengungsian",
+          "Dapur Umum Lapangan",
+          "Sumur Bor Bersih",
+          "MCK"
+        ],
+        "source": "BPBD Kabupaten Aceh Utara — Renkon Banjir",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2635,
+          5.0112
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "evac-4",
+      "properties": {
+        "name": "Balai Pertemuan Gampong Alue Bili Pirak Timur",
+        "kecamatan": "Pirak Timur",
+        "coord": [
+          97.2891,
+          4.9664
+        ],
+        "address": "Keude Alue Bili, Kec. Pirak Timur",
+        "capacity_persons": 450,
+        "facility_type": "Gedung Serbaguna Gampong",
+        "elevation_m": 15,
+        "verification_status": "TERVERIFIKASI",
+        "facilities_available": [
+          "Pos Dapur Mandiri",
+          "Posko Siaga Gampong",
+          "Akses R2/R4"
+        ],
+        "source": "BPBD Kabupaten Aceh Utara — Renkon Banjir",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2891,
+          4.9664
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "evac-5",
+      "properties": {
+        "name": "Masjid Besar Al-Ikhlas Geudong",
+        "kecamatan": "Samudera",
+        "coord": [
+          97.2165,
+          5.1262
+        ],
+        "address": "Keude Geudong, Kec. Samudera",
+        "capacity_persons": 1000,
+        "facility_type": "Tempat Ibadah",
+        "elevation_m": 10,
+        "verification_status": "TERVERIFIKASI",
+        "facilities_available": [
+          "Halaman Luas",
+          "Air Bersih",
+          "MCK",
+          "Dekat Jalur Arteri Medan-Banda Aceh"
+        ],
+        "source": "BPBD Kabupaten Aceh Utara — Renkon Banjir",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2165,
+          5.1262
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "evac-6",
+      "properties": {
+        "name": "Gedung Serbaguna Blang Jruen Tanah Luas",
+        "kecamatan": "Tanah Luas",
+        "coord": [
+          97.2298,
+          5.0325
+        ],
+        "address": "Keude Blang Jruen, Kec. Tanah Luas",
+        "capacity_persons": 700,
+        "facility_type": "Gedung Pertemuan Kecamatan",
+        "elevation_m": 13,
+        "verification_status": "TERVERIFIKASI",
+        "facilities_available": [
+          "Aula Tertutup",
+          "Dapur Lapangan",
+          "Listrik Cadangan"
+        ],
+        "source": "BPBD Kabupaten Aceh Utara — Renkon Banjir",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2298,
+          5.0325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "evac-7",
+      "properties": {
+        "name": "Kompleks Pendidikan MAN 1 Matangkuli",
+        "kecamatan": "Matangkuli",
+        "coord": [
+          97.2598,
+          5.0089
+        ],
+        "address": "Jl. Ceumpeudak Km. 1, Kec. Matangkuli",
+        "capacity_persons": 600,
+        "facility_type": "Gedung Sekolah 2 Lantai",
+        "elevation_m": 15,
+        "verification_status": "TERVERIFIKASI",
+        "facilities_available": [
+          "Ruang Kelas Penampungan Lantai 2",
+          "Toilet Sekolah",
+          "Air Bersih"
+        ],
+        "source": "BPBD Kabupaten Aceh Utara — Renkon Banjir",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2598,
+          5.0089
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "evac-8",
+      "properties": {
+        "name": "Gedung Olahraga & Kepemudaan Lhoksukon",
+        "kecamatan": "Lhoksukon",
+        "coord": [
+          97.3218,
+          5.0421
+        ],
+        "address": "Jl. Gedung Nasional, Keude Lhoksukon",
+        "capacity_persons": 1500,
+        "facility_type": "Gelanggang Olah Raga (GOR)",
+        "elevation_m": 11,
+        "verification_status": "TERVERIFIKASI",
+        "facilities_available": [
+          "Lapangan Indoor Luas",
+          "Distribusi Logistik",
+          "Tenda Tambahan",
+          "MCK"
+        ],
+        "source": "BPBD Kabupaten Aceh Utara — Renkon Banjir",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.3218,
+          5.0421
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "evac-9",
+      "properties": {
+        "name": "Masjid Raya Panton Labu",
+        "kecamatan": "Tanah Jambo Aye",
+        "coord": [
+          97.4862,
+          5.0694
+        ],
+        "address": "Pusat Kota Panton Labu, Kec. Tanah Jambo Aye",
+        "capacity_persons": 1200,
+        "facility_type": "Tempat Ibadah",
+        "elevation_m": 9,
+        "verification_status": "TERVERIFIKASI",
+        "facilities_available": [
+          "Lantai Bertingkat",
+          "MCK Banyak",
+          "Dekat Akses Medis Puskesmas"
+        ],
+        "source": "BPBD Kabupaten Aceh Utara — Renkon Banjir",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.4862,
+          5.0694
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "evac-10",
+      "properties": {
+        "name": "Kantor Camat & Balai Pelatihan Dewantara",
+        "kecamatan": "Dewantara",
+        "coord": [
+          97.021,
+          5.2428
+        ],
+        "address": "Jl. Rel Kereta Api, Keude Krueng Geukueh",
+        "capacity_persons": 800,
+        "facility_type": "Gedung Pemerintahan",
+        "elevation_m": 8,
+        "verification_status": "TERVERIFIKASI",
+        "facilities_available": [
+          "Aula Rapat",
+          "Dapur Umum PMI",
+          "Posko Komunikasi"
+        ],
+        "source": "BPBD Kabupaten Aceh Utara — Renkon Banjir",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.021,
+          5.2428
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+[
+  {
+    "id": "FL-2023-12-25",
+    "title": "Banjir Luapan Krueng Keureuto & Krueng Pirak Akhir 2023",
+    "event_date": "2023-12-25",
+    "year": 2023,
+    "water_depth_cm": "80 - 180 cm",
+    "affected_kecamatan_count": 15,
+    "affected_kecamatan": [
+      "Lhoksukon",
+      "Matangkuli",
+      "Pirak Timur",
+      "Tanah Luas",
+      "Baktiya",
+      "Cot Girek",
+      "Langkahan"
+    ],
+    "affected_people": 43250,
+    "evacuees_count": 12400,
+    "damage_summary": "6.800 unit rumah terendam, 1.450 hektar sawah puso, jalan nasional tergenang di Keude Lhoksukon",
+    "trigger_cause": "Curah hujan ekstrem di hulu pegunungan Bener Meriah/Paya Bakong dan sedimentasi sungai",
+    "source": "Pusdalops BPBD Kabupaten Aceh Utara & BNPB",
+    "verification_status": "TERVERIFIKASI"
+  },
+  {
+    "id": "FL-2023-01-21",
+    "title": "Banjir Luapan Awal Tahun 2023",
+    "event_date": "2023-01-21",
+    "year": 2023,
+    "water_depth_cm": "50 - 140 cm",
+    "affected_kecamatan_count": 12,
+    "affected_kecamatan": [
+      "Matangkuli",
+      "Pirak Timur",
+      "Lhoksukon",
+      "Tanah Luas",
+      "Samudera",
+      "Syamtalira Aron"
+    ],
+    "affected_people": 31800,
+    "evacuees_count": 8650,
+    "damage_summary": "Tanggul jebol di 2 titik Krueng Peuto, 3 jembatan gantung rusak ringan",
+    "trigger_cause": "Hujan deras berdurasi 18 jam di kawasan hulu DAS Krueng Pase dan Keureuto",
+    "source": "Pusdalops BPBD Kabupaten Aceh Utara & DIBI BNPB",
+    "verification_status": "TERVERIFIKASI"
+  },
+  {
+    "id": "FL-2022-10-06",
+    "title": "Banjir Bandang & Luapan Oktober 2022",
+    "event_date": "2022-10-06",
+    "year": 2022,
+    "water_depth_cm": "100 - 200 cm",
+    "affected_kecamatan_count": 16,
+    "affected_kecamatan": [
+      "Lhoksukon",
+      "Matangkuli",
+      "Pirak Timur",
+      "Tanah Luas",
+      "Cot Girek",
+      "Baktiya",
+      "Dewantara"
+    ],
+    "affected_people": 39500,
+    "evacuees_count": 14200,
+    "damage_summary": "Pusat Pemerintahan Lhoksukon terisolir, RSUD Muchtar Hasbi dialihkan sementara ke pos darurat",
+    "trigger_cause": "Debit banjir kiriman ekstrem dari hulu Krueng Keureuto melebihi kapasitas palung sungai",
+    "source": "BPBD Aceh Utara — Laporan Tanggap Darurat Bencana No. 360/412/2022",
+    "verification_status": "TERVERIFIKASI"
+  },
+  {
+    "id": "FL-2022-01-02",
+    "title": "Banjir Bandang Awal Tahun 2022",
+    "event_date": "2022-01-02",
+    "year": 2022,
+    "water_depth_cm": "60 - 150 cm",
+    "affected_kecamatan_count": 14,
+    "affected_kecamatan": [
+      "Matangkuli",
+      "Lhoksukon",
+      "Pirak Timur",
+      "Tanah Luas",
+      "Langkahan",
+      "Muara Batu"
+    ],
+    "affected_people": 33400,
+    "evacuees_count": 9800,
+    "damage_summary": "2 korban jiwa terseret arus banjir di Matangkuli, jalan lintas timur Sumatera lumpuh 2 hari",
+    "trigger_cause": "Siklon tropis lemah memicu konvergensi hujan lebat di pesisir utara dan pegunungan Aceh",
+    "source": "BNPB — DIBI Data Bencana Indonesia 2022",
+    "verification_status": "TERVERIFIKASI"
+  },
+  {
+    "id": "FL-2020-12-05",
+    "title": "Banjir Besar Serentak Akhir Tahun 2020",
+    "event_date": "2020-12-05",
+    "year": 2020,
+    "water_depth_cm": "100 - 250 cm",
+    "affected_kecamatan_count": 23,
+    "affected_kecamatan": [
+      "Lhoksukon",
+      "Matangkuli",
+      "Pirak Timur",
+      "Tanah Luas",
+      "Samudera",
+      "Syamtalira Aron",
+      "Cot Girek",
+      "Langkahan",
+      "Baktiya",
+      "Baktiya Barat",
+      "Dewantara",
+      "Meurah Mulia"
+    ],
+    "affected_people": 78500,
+    "evacuees_count": 36200,
+    "damage_summary": "Banjir terparah dalam satu dekade; 4 tanggul utama jebol, ribuan hektar tambak hancur",
+    "trigger_cause": "Curah hujan kumulatif 3 hari > 320 mm di seluruh DAS Aceh Utara bersamaan pasang laut perbani",
+    "source": "BNPB & BPBA — Laporan Khusus Bencana Banjir Aceh Utara 2020",
+    "verification_status": "TERVERIFIKASI"
+  },
+  {
+    "id": "FL-2019-11-28",
+    "title": "Banjir Genangan Musim Hujan 2019",
+    "event_date": "2019-11-28",
+    "year": 2019,
+    "water_depth_cm": "40 - 90 cm",
+    "affected_kecamatan_count": 8,
+    "affected_kecamatan": [
+      "Matangkuli",
+      "Pirak Timur",
+      "Lhoksukon",
+      "Tanah Luas"
+    ],
+    "affected_people": 14200,
+    "evacuees_count": 3100,
+    "damage_summary": "Genangan persawahan dan pemukiman bantaran sungai 3-4 hari",
+    "trigger_cause": "Hujan harian intensitas sedang-lebat di DAS Krueng Pirak & Keureuto",
+    "source": "DIBI BNPB",
+    "verification_status": "TERVERIFIKASI"
+  }
+]

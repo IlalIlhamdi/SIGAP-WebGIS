@@ -1,0 +1,74 @@
+[
+  {
+    "id": "DS-INARISK-ADMIN",
+    "dataset_name": "Batas Administrasi Kabupaten dan Kecamatan Aceh Utara",
+    "institution": "Badan Nasional Penanggulangan Bencana (BNPB) & Badan Informasi Geospasial (BIG)",
+    "source_url": "https://gis.bnpb.go.id/server/rest/services/inarisk/batas_administrasi/MapServer",
+    "reference_year": 2021,
+    "accessed_at": "2026-10-08",
+    "license": "Data Terbuka Pemerintah RI (Undang-Undang Informasi Geospasial No. 4/2011)",
+    "crs": "EPSG:4326 (WGS 84) ditransformasi dari SRGI 2013",
+    "status": "TERVERIFIKASI",
+    "notes": "Lapisan batas resmi 27 kecamatan di Kabupaten Aceh Utara, kode wilayah KDPKAB 11.08."
+  },
+  {
+    "id": "DS-INARISK-HAZARD",
+    "dataset_name": "Indeks Bahaya Banjir (INDEKS_BAHAYA_BANJIR)",
+    "institution": "Badan Nasional Penanggulangan Bencana (BNPB) — InaRISK",
+    "source_url": "https://gis.bnpb.go.id/server/rest/services/inarisk/INDEKS_BAHAYA_BANJIR/ImageServer",
+    "reference_year": 2023,
+    "accessed_at": "2026-10-08",
+    "license": "Badan Nasional Penanggulangan Bencana (BNPB)",
+    "crs": "EPSG:3395 (World Mercator) resolusi piksel 100m x 100m",
+    "status": "TERVERIFIKASI",
+    "notes": "Layanan citra raster resmi indeks bahaya banjir berbasis pemodelan hidrologi nasional."
+  },
+  {
+    "id": "DS-BMKG-WEATHER",
+    "dataset_name": "Prakiraan Cuaca Berbasis Wilayah Administrasi Tingkat IV",
+    "institution": "Badan Meteorologi, Klimatologi, dan Geofisika (BMKG)",
+    "source_url": "https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=11.08.04.2001",
+    "reference_year": 2026,
+    "accessed_at": "2026-10-08",
+    "license": "Data Terbuka BMKG",
+    "crs": "N/A (Tabular API data)",
+    "status": "TERVERIFIKASI",
+    "notes": "Prakiraan cuaca real-time untuk Lhoksukon dan kecamatan di Kabupaten Aceh Utara."
+  },
+  {
+    "id": "DS-BPS-STATISTICS",
+    "dataset_name": "Kabupaten Aceh Utara Dalam Angka (Kependudukan & Luas Wilayah)",
+    "institution": "Badan Pusat Statistik (BPS) Kabupaten Aceh Utara",
+    "source_url": "https://acehutarakab.bps.go.id/",
+    "reference_year": 2024,
+    "accessed_at": "2026-10-08",
+    "license": "Hak Cipta BPS — Penggunaan Terbuka untuk Kepentingan Publik & Pendidikan",
+    "crs": "N/A (Statistik Tabular)",
+    "status": "TERVERIFIKASI",
+    "notes": "Data agregat kependudukan, kepadatan penduduk, dan luas wilayah per kecamatan 2023-2024."
+  },
+  {
+    "id": "DS-OSM-HYDRO",
+    "dataset_name": "Jaringan Sungai dan Saluran Air (Waterway)",
+    "institution": "OpenStreetMap Contributors",
+    "source_url": "https://www.openstreetmap.org/",
+    "reference_year": 2024,
+    "accessed_at": "2026-10-08",
+    "license": "Open Database License (ODbL) 1.0",
+    "crs": "EPSG:4326 (WGS 84)",
+    "status": "TERVERIFIKASI",
+    "notes": "Data geometri segmen sungai Krueng Keureuto, Krueng Pirak, Krueng Pase, Krueng Sawang, dsb."
+  },
+  {
+    "id": "DS-BPBD-HISTORICAL",
+    "dataset_name": "Catatan Historis & Rencana Kontinjensi Bencana Banjir",
+    "institution": "Badan Penanggulangan Bencana Daerah (BPBD) Kabupaten Aceh Utara & DIBI BNPB",
+    "source_url": "https://dibi.bnpb.go.id/",
+    "reference_year": 2023,
+    "accessed_at": "2026-10-08",
+    "license": "Data Publik Pemerintah Kabupaten Aceh Utara",
+    "crs": "EPSG:4326 untuk titik koordinat posko",
+    "status": "TERVERIFIKASI",
+    "notes": "Daftar kejadian banjir besar tercatat (2019-2023) beserta data korban, pengungsi, dan fasilitas evakuasi."
+  }
+]

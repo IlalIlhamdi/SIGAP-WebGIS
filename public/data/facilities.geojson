@@ -1,0 +1,526 @@
+{
+  "type": "FeatureCollection",
+  "name": "Fasilitas Publik Terverifikasi Kabupaten Aceh Utara",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "facility-1",
+      "properties": {
+        "name": "RSUD Cut Meutia Aceh Utara",
+        "category": "Rumah Sakit",
+        "kecamatan": "Dewantara",
+        "coord": [
+          97.1402,
+          5.1481
+        ],
+        "address": "Jl. Banda Aceh - Medan Km. 274, Bukit Rata",
+        "phone": "(0645) 46331",
+        "operator": "Pemkab Aceh Utara",
+        "status_operasional": "24 Jam",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": false
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.1402,
+          5.1481
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-2",
+      "properties": {
+        "name": "RSUD Muchtar Hasbi Aceh Utara",
+        "category": "Rumah Sakit",
+        "kecamatan": "Lhoksukon",
+        "coord": [
+          97.315,
+          5.042
+        ],
+        "address": "Jl. Lhoksukon - Cot Girek, Alue Mudem, Kec. Lhoksukon",
+        "phone": "(0645) 31089",
+        "operator": "Pemkab Aceh Utara",
+        "status_operasional": "24 Jam",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.315,
+          5.042
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-3",
+      "properties": {
+        "name": "Puskesmas Lhoksukon",
+        "category": "Puskesmas",
+        "kecamatan": "Lhoksukon",
+        "coord": [
+          97.3188,
+          5.0441
+        ],
+        "address": "Jl. Medan - Banda Aceh No. 45, Keude Lhoksukon",
+        "phone": "(0645) 31118",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "24 Jam / Rawat Inap & UGD",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.3188,
+          5.0441
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-4",
+      "properties": {
+        "name": "Puskesmas Matangkuli",
+        "category": "Puskesmas",
+        "kecamatan": "Matangkuli",
+        "coord": [
+          97.2621,
+          5.0064
+        ],
+        "address": "Jl. Simpang Ceumpeudak, Keude Matangkuli",
+        "phone": "(0645) 32104",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Inap & UGD Siaga Banjir",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2621,
+          5.0064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-5",
+      "properties": {
+        "name": "Puskesmas Pirak Timur",
+        "category": "Puskesmas",
+        "kecamatan": "Pirak Timur",
+        "coord": [
+          97.2882,
+          4.9652
+        ],
+        "address": "Jl. Alue Bili, Alue Bili Geudubang, Pirak Timur",
+        "phone": "-",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Pelayanan Kesehatan Dasar",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2882,
+          4.9652
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-6",
+      "properties": {
+        "name": "Puskesmas Tanah Luas",
+        "category": "Puskesmas",
+        "kecamatan": "Tanah Luas",
+        "coord": [
+          97.2285,
+          5.0312
+        ],
+        "address": "Jl. ExxonMobil Km 12, Blang Jruen, Kec. Tanah Luas",
+        "phone": "(0645) 34112",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Inap & UGD",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2285,
+          5.0312
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-7",
+      "properties": {
+        "name": "Puskesmas Samudera",
+        "category": "Puskesmas",
+        "kecamatan": "Samudera",
+        "coord": [
+          97.2181,
+          5.1274
+        ],
+        "address": "Jl. Medan - Banda Aceh, Keude Geudong, Kec. Samudera",
+        "phone": "(0645) 41230",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Inap & UGD",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2181,
+          5.1274
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-8",
+      "properties": {
+        "name": "Puskesmas Syamtalira Aron",
+        "category": "Puskesmas",
+        "kecamatan": "Syamtalira Aron",
+        "coord": [
+          97.2472,
+          5.0883
+        ],
+        "address": "Jl. Medan - Banda Aceh, Keude Aron, Syamtalira Aron",
+        "phone": "-",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Jalan & Tindakan",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2472,
+          5.0883
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-9",
+      "properties": {
+        "name": "Puskesmas Baktiya",
+        "category": "Puskesmas",
+        "kecamatan": "Baktiya",
+        "coord": [
+          97.411,
+          5.0592
+        ],
+        "address": "Jl. Medan - Banda Aceh, Alue Ie Puteh, Baktiya",
+        "phone": "(0645) 35120",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Inap & UGD",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.411,
+          5.0592
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-10",
+      "properties": {
+        "name": "Puskesmas Tanah Jambo Aye",
+        "category": "Puskesmas",
+        "kecamatan": "Tanah Jambo Aye",
+        "coord": [
+          97.4852,
+          5.0683
+        ],
+        "address": "Jl. Rawasari, Panton Labu, Kec. Tanah Jambo Aye",
+        "phone": "(0645) 36118",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Inap & UGD",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.4852,
+          5.0683
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-11",
+      "properties": {
+        "name": "Puskesmas Dewantara",
+        "category": "Puskesmas",
+        "kecamatan": "Dewantara",
+        "coord": [
+          97.0192,
+          5.2443
+        ],
+        "address": "Jl. Krueng Geukueh - Tambon Tunong, Dewantara",
+        "phone": "(0645) 56122",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Inap & UGD",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.0192,
+          5.2443
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-12",
+      "properties": {
+        "name": "Puskesmas Muara Batu",
+        "category": "Puskesmas",
+        "kecamatan": "Muara Batu",
+        "coord": [
+          96.9531,
+          5.2482
+        ],
+        "address": "Jl. Medan - Banda Aceh, Krueng Mane, Muara Batu",
+        "phone": "(0645) 57110",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Jalan & Gawat Darurat",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          96.9531,
+          5.2482
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-13",
+      "properties": {
+        "name": "Puskesmas Cot Girek",
+        "category": "Puskesmas",
+        "kecamatan": "Cot Girek",
+        "coord": [
+          97.3321,
+          4.9392
+        ],
+        "address": "Jl. Pabrik Gula, Batu XII, Kec. Cot Girek",
+        "phone": "-",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Jalan & Rawat Inap",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.3321,
+          4.9392
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-14",
+      "properties": {
+        "name": "Puskesmas Langkahan",
+        "category": "Puskesmas",
+        "kecamatan": "Langkahan",
+        "coord": [
+          97.4123,
+          4.8872
+        ],
+        "address": "Simpang Tiga Langkahan, Kec. Langkahan",
+        "phone": "-",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Jalan Siaga",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.4123,
+          4.8872
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-15",
+      "properties": {
+        "name": "Puskesmas Kuta Makmur",
+        "category": "Puskesmas",
+        "kecamatan": "Kuta Makmur",
+        "coord": [
+          97.0543,
+          5.0742
+        ],
+        "address": "Jl. Buloh Blang Ara, Kec. Kuta Makmur",
+        "phone": "-",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Jalan & Bersalin",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.0543,
+          5.0742
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-16",
+      "properties": {
+        "name": "Puskesmas Sawang",
+        "category": "Puskesmas",
+        "kecamatan": "Sawang",
+        "coord": [
+          96.8852,
+          5.0112
+        ],
+        "address": "Jl. Sawang - Krueng Mane, Keude Sawang",
+        "phone": "-",
+        "operator": "Dinas Kesehatan Kab. Aceh Utara",
+        "status_operasional": "Rawat Inap & UGD",
+        "source": "Dinas Kesehatan Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          96.8852,
+          5.0112
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-17",
+      "properties": {
+        "name": "Kantor Bupati & Kompleks Pemerintahan Aceh Utara",
+        "category": "Pemerintahan",
+        "kecamatan": "Lhoksukon",
+        "coord": [
+          97.3242,
+          5.0471
+        ],
+        "address": "Jl. Alue Mudem, Landing, Kec. Lhoksukon",
+        "phone": "(0645) 31001",
+        "operator": "Pemerintah Kabupaten Aceh Utara",
+        "status_operasional": "Pusat Pemerintahan Daerah",
+        "source": "Sekretariat Daerah Kab. Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.3242,
+          5.0471
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-18",
+      "properties": {
+        "name": "Kantor BPBD Kabupaten Aceh Utara",
+        "category": "Pusat Tanggap Bencana",
+        "kecamatan": "Lhoksukon",
+        "coord": [
+          97.3214,
+          5.0452
+        ],
+        "address": "Kompleks Perkantoran Landing, Lhoksukon",
+        "phone": "(0645) 31113",
+        "operator": "Badan Penanggulangan Bencana Daerah (BPBD)",
+        "status_operasional": "Pusdalops 24 Jam Siaga Kebencanaan",
+        "source": "BPBD Kabupaten Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.3214,
+          5.0452
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-19",
+      "properties": {
+        "name": "Polres Aceh Utara",
+        "category": "Keamanan",
+        "kecamatan": "Lhoksukon",
+        "coord": [
+          97.3262,
+          5.0435
+        ],
+        "address": "Jl. Medan - Banda Aceh, Alue Mudem, Lhoksukon",
+        "phone": "110 / (0645) 31110",
+        "operator": "Kepolisian Resor Aceh Utara",
+        "status_operasional": "24 Jam",
+        "source": "Polres Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.3262,
+          5.0435
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "facility-20",
+      "properties": {
+        "name": "Polsek Matangkuli",
+        "category": "Keamanan",
+        "kecamatan": "Matangkuli",
+        "coord": [
+          97.2612,
+          5.0084
+        ],
+        "address": "Jl. Ceumpeudak, Keude Matangkuli",
+        "phone": "(0645) 32110",
+        "operator": "Kepolisian Sektor Matangkuli",
+        "status_operasional": "24 Jam",
+        "source": "Polres Aceh Utara (2023)",
+        "is_verified_boundary": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.2612,
+          5.0084
+        ]
+      }
+    }
+  ]
+}
