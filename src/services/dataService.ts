@@ -1,4 +1,5 @@
 import * as turf from '@turf/turf';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import type { 
   KecamatanIndicator, 
   FloodEvent, 
@@ -320,7 +321,97 @@ export const dataService = {
 
     list.unshift(newRep);
     localStorage.setItem('sigap_reports', JSON.stringify(list));
+
+    // Sinkronisasi ke Supabase jika terkonfigurasi
+    if (isSupabaseConfigured && supabase) {
+      supabase
+        .from('flood_reports')
+        .insert({
+          report_code: code,
+          reporter_name: report.reporter_name || 'Warga Anonim',
+          reporter_phone: report.reporter_contact || null,
+          gampong: report.gampong || 'Gampong',
+          location_detail: report.location_detail || '',
+          reported_location: `POINT(${report.coord[1]} ${report.coord[0]})`,
+          event_time: report.event_time || now.toISOString(),
+          water_depth_cm: report.water_depth_cm || 0,
+          description: report.description || '',
+          photo_path: report.photo_url || null,
+          status: 'Menunggu Verifikasi',
+          is_simulation: false
+        })
+        .then(({ error }: any) => {
+          if (error) {
+            console.warn('[Supabase] Catatan sinkronisasi laporan:', error.message);
+          } else {
+            console.log('[Supabase] Laporan berhasil tersimpan ke database cloud:', code);
+          }
+        })
+        .catch((err: any) => console.warn('[Supabase] Sinkronisasi error:', err));
+    }
+
     return newRep;
+  },
+
+  async syncReportsFromSupabase(): Promise<FloodReportItem[]> {
+    if (!isSupabaseConfigured || !supabase) {
+      return this.getReports();
+    }
+    try {
+      const { data, error } = await supabase
+        .from('flood_reports')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error || !data) {
+        return this.getReports();
+      }
+
+      const localList = this.getReports();
+      const localCodes = new Set(localList.map(r => r.report_code));
+
+      for (const row of data) {
+        if (!localCodes.has(row.report_code)) {
+          let coord: [number, number] = [5.044, 97.319];
+          if (row.reported_location) {
+            if (row.reported_location.coordinates) {
+              coord = [row.reported_location.coordinates[1], row.reported_location.coordinates[0]];
+            } else if (typeof row.reported_location === 'string') {
+              const match = row.reported_location.match(/POINT\(([^ ]+)\s+([^)]+)\)/i);
+              if (match) {
+                coord = [parseFloat(match[2]), parseFloat(match[1])];
+              }
+            }
+          }
+
+          localList.unshift({
+            id: row.id,
+            report_code: row.report_code,
+            reporter_name: row.reporter_name || 'Warga Anonim',
+            reporter_contact: row.reporter_phone,
+            kecamatan: 'Aceh Utara',
+            gampong: row.gampong,
+            location_detail: row.location_detail,
+            coord,
+            event_time: row.event_time,
+            water_depth_cm: row.water_depth_cm,
+            description: row.description,
+            photo_url: row.photo_path,
+            status: row.status,
+            created_at: row.created_at,
+            verified_at: row.verified_at,
+            verified_by: row.verified_by,
+            is_simulation: row.is_simulation || false
+          });
+        }
+      }
+
+      localStorage.setItem('sigap_reports', JSON.stringify(localList));
+      return localList;
+    } catch (e) {
+      console.warn('[Supabase] Error sync reports:', e);
+      return this.getReports();
+    }
   },
 
   updateReportStatus(id: string, status: FloodReportItem['status'], verifiedBy: string) {
