@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   ShieldCheck, 
   Search
@@ -9,6 +10,7 @@ import type { FloodReportItem } from '../types';
 
 export const AdminReportsVerificationPage: React.FC = () => {
   const { role } = useApp();
+  const navigate = useNavigate();
   const [reports, setReports] = useState<FloodReportItem[]>(() => dataService.getReports());
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -34,6 +36,26 @@ export const AdminReportsVerificationPage: React.FC = () => {
 
   const pendingCount = reports.filter(r => r.status === 'Menunggu Verifikasi').length;
   const verifiedCount = reports.filter(r => r.status === 'Diverifikasi').length;
+
+  if (role === 'public') {
+    return (
+      <div className="p-8 max-w-md mx-auto text-center space-y-4 my-12">
+        <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
+          <ShieldCheck className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-extrabold text-[#0D653A]">Akses Verifikator Dibatasi</h2>
+        <p className="text-xs text-[#66766C] leading-relaxed">
+          Halaman verifikasi laporan hanya dapat diakses oleh petugas verifikator Pusdalops BPBD Kabupaten Aceh Utara.
+        </p>
+        <button
+          onClick={() => navigate('/login')}
+          className="pill-btn bg-[#16834B] hover:bg-[#0D653A] text-white px-5 py-2.5 text-xs font-bold"
+        >
+          Masuk ke Portal Petugas
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">

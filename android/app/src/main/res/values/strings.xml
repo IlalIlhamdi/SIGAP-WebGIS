@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SIGAP</string>
+    <string name="title_activity_main">SIGAP</string>
+    <string name="package_name">id.sigap.acehutara</string>
+    <string name="custom_url_scheme">id.sigap.acehutara</string>
+</resources>

@@ -13,6 +13,26 @@ export const AdminDashboardPage: React.FC = () => {
   const verified = reports.filter(r => r.status === 'Diverifikasi');
   const followedUp = reports.filter(r => r.status === 'Ditindaklanjuti');
 
+  if (role === 'public') {
+    return (
+      <div className="p-8 max-w-md mx-auto text-center space-y-4 my-12">
+        <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
+          <AlertTriangle className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-extrabold text-[#0D653A]">Akses Portal Dibatasi</h2>
+        <p className="text-xs text-[#66766C] leading-relaxed">
+          Panel kendali operasi ini khusus diperuntukkan bagi petugas berwenang Pusdalops BPBD Kabupaten Aceh Utara.
+        </p>
+        <button
+          onClick={() => navigate('/login')}
+          className="pill-btn bg-[#16834B] hover:bg-[#0D653A] text-white px-5 py-2.5 text-xs font-bold"
+        >
+          Masuk ke Portal Petugas
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
       <div className="border-b border-[#E3EAE5] pb-4 space-y-1">

@@ -9,6 +9,12 @@ import type {
   FloodReportItem 
 } from '../types';
 
+export interface AddReportResult {
+  report: FloodReportItem;
+  syncedToCloud: boolean;
+  cloudMessage: string;
+}
+
 let cachedKecamatanGeo: any = null;
 let cachedBoundaryGeo: any = null;
 let cachedRiversGeo: any = null;
@@ -98,7 +104,8 @@ export const dataService = {
     try {
       // Kode adm4 Lhoksukon, Aceh Utara: 11.08.04.2001
       const res = await fetch('https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=11.08.04.2001', {
-        headers: { 'Accept': 'application/json' }
+        headers: { 'Accept': 'application/json' },
+        signal: AbortSignal.timeout(15000)
       });
       if (res.ok) {
         const json = await res.json();
@@ -107,10 +114,10 @@ export const dataService = {
           const flat = json.data[0].cuaca.flat();
           cuacaList = flat.map((c: any) => ({
             datetime: c.local_datetime || c.datetime || "Hari Ini",
-            t: c.t ?? 27,
-            hu: c.hu ?? 86,
-            weather_desc: c.weather_desc || c.weather_desc_en || "Hujan Sedang",
-            ws: c.ws ?? 14,
+            t: c.t ?? null,
+            hu: c.hu ?? null,
+            weather_desc: c.weather_desc || c.weather_desc_en || "Tidak tersedia",
+            ws: c.ws ?? null,
             wd: c.wd || "Barat Daya"
           }));
         } else if (Array.isArray(json?.cuaca)) {
@@ -132,24 +139,7 @@ export const dataService = {
       console.warn("BMKG real API fallback active:", e);
     }
 
-    // Official reference weather snapshot for Aceh Utara (Lhoksukon / Malikussaleh Station)
-    return {
-      status: 'FALLBACK',
-      source: 'BMKG Stasiun Meteorologi Malikussaleh (Snapshot Resmi)',
-      data: {
-        lokasi: {
-          provinsi: "Aceh",
-          kotkab: "Aceh Utara",
-          kecamatan: "Lhoksukon"
-        },
-        cuaca: [
-          { datetime: "Hari Ini - Pagi", t: 26, hu: 88, weather_desc: "Hujan Sedang", ws: 14, wd: "Barat Daya" },
-          { datetime: "Hari Ini - Siang", t: 30, hu: 76, weather_desc: "Hujan Lebat", ws: 18, wd: "Barat Laut" },
-          { datetime: "Hari Ini - Malam", t: 25, hu: 92, weather_desc: "Hujan Petir", ws: 22, wd: "Barat" },
-          { datetime: "Besok - Dini Hari", t: 24, hu: 95, weather_desc: "Hujan Ringan", ws: 10, wd: "Selatan" }
-        ]
-      }
-    };
+    throw new Error('Tidak dapat memuat prakiraan BMKG. Periksa koneksi dan coba lagi.');
   },
 
   // Real InaRISK Flood Hazard Value Identify
@@ -306,7 +296,7 @@ export const dataService = {
     return initialReports;
   },
 
-  addReport(report: Omit<FloodReportItem, 'id' | 'report_code' | 'created_at' | 'status'>): FloodReportItem {
+  async addReport(report: Omit<FloodReportItem, 'id' | 'report_code' | 'created_at' | 'status'>): Promise<AddReportResult> {
     const list = this.getReports();
     const now = new Date();
     const code = `LAP-ACUT-${now.getFullYear()}-${String(list.length + 1).padStart(3, '0')}`;
@@ -322,35 +312,47 @@ export const dataService = {
     list.unshift(newRep);
     localStorage.setItem('sigap_reports', JSON.stringify(list));
 
-    // Sinkronisasi ke Supabase jika terkonfigurasi
+    let syncedToCloud = false;
+    let cloudMessage = 'Tersimpan di penyimpanan lokal perangkat.';
+
+    // Sinkronisasi ke Supabase jika terkonfigurasi & online
     if (isSupabaseConfigured && supabase) {
-      supabase
-        .from('flood_reports')
-        .insert({
-          report_code: code,
-          reporter_name: report.reporter_name || 'Warga Anonim',
-          reporter_phone: report.reporter_contact || null,
-          gampong: report.gampong || 'Gampong',
-          location_detail: report.location_detail || '',
-          reported_location: `POINT(${report.coord[1]} ${report.coord[0]})`,
-          event_time: report.event_time || now.toISOString(),
-          water_depth_cm: report.water_depth_cm || 0,
-          description: report.description || '',
-          photo_path: report.photo_url || null,
-          status: 'Menunggu Verifikasi',
-          is_simulation: false
-        })
-        .then(({ error }: any) => {
-          if (error) {
-            console.warn('[Supabase] Catatan sinkronisasi laporan:', error.message);
-          } else {
-            console.log('[Supabase] Laporan berhasil tersimpan ke database cloud:', code);
-          }
-        })
-        .catch((err: any) => console.warn('[Supabase] Sinkronisasi error:', err));
+      try {
+        const { error } = await supabase
+          .from('flood_reports')
+          .insert({
+            report_code: code,
+            reporter_name: report.reporter_name || 'Warga Anonim',
+            reporter_phone: report.reporter_contact || null,
+            gampong: report.gampong || 'Gampong',
+            location_detail: report.location_detail || '',
+            reported_location: `POINT(${report.coord[1]} ${report.coord[0]})`,
+            event_time: report.event_time || now.toISOString(),
+            water_depth_cm: report.water_depth_cm || 0,
+            description: report.description || '',
+            photo_path: report.photo_url || null,
+            status: 'Menunggu Verifikasi',
+            is_simulation: false
+          });
+
+        if (error) {
+          console.warn('[Supabase] Sinkronisasi laporan warning:', error.message);
+          cloudMessage = `Gagal sinkron ke cloud (${error.message}). Disimpan aman di perangkat.`;
+        } else {
+          syncedToCloud = true;
+          cloudMessage = 'Berhasil disinkronkan ke database cloud BPBD.';
+        }
+      } catch (err: any) {
+        console.warn('[Supabase] Sinkronisasi network error:', err);
+        cloudMessage = 'Koneksi jaringan terputus. Laporan disimpan secara lokal di perangkat.';
+      }
     }
 
-    return newRep;
+    return {
+      report: newRep,
+      syncedToCloud,
+      cloudMessage,
+    };
   },
 
   async syncReportsFromSupabase(): Promise<FloodReportItem[]> {

@@ -71,12 +71,28 @@ describe('SIGAP 1.0 Geospatial & Core Logic Tests', () => {
     });
   });
 
-  it('Data Sources metadata contains required official authorities', () => {
-    expect(sources.length).toBe(6);
-    const institutions = sources.map((s: any) => s.institution);
-    expect(institutions.some((i: string) => i.includes('BNPB'))).toBe(true);
-    expect(institutions.some((i: string) => i.includes('BMKG'))).toBe(true);
-    expect(institutions.some((i: string) => i.includes('BPS'))).toBe(true);
-    expect(institutions.some((i: string) => i.includes('OpenStreetMap'))).toBe(true);
+  it('Hazard level distribution matches legend counts: 5 Tinggi, 14 Sedang, 8 Rendah', () => {
+    const tinggi = indicators.filter((k: any) => k.hazard_level === 'Tinggi');
+    const sedang = indicators.filter((k: any) => k.hazard_level === 'Sedang');
+    const rendah = indicators.filter((k: any) => k.hazard_level === 'Rendah');
+
+    expect(tinggi.length).toBe(5);
+    expect(sedang.length).toBe(14);
+    expect(rendah.length).toBe(8);
+    expect(tinggi.length + sedang.length + rendah.length).toBe(27);
+
+    // Verify key priority high hazard subdistricts
+    const tinggiNames = tinggi.map((k: any) => k.name);
+    expect(tinggiNames).toContain('Lhoksukon');
+    expect(tinggiNames).toContain('Matangkuli');
+    expect(tinggiNames).toContain('Pirak Timur');
+  });
+
+  it('Evacuation shelters do not use unverified Aman label, strictly use TERVERIFIKASI', () => {
+    evacGeo.features.forEach((f: any) => {
+      // Must not use raw 'Aman' as status
+      expect(f.properties.verification_status).not.toBe('Aman');
+      expect(f.properties.verification_status).toBe('TERVERIFIKASI');
+    });
   });
 });

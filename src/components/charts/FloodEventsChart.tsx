@@ -26,13 +26,13 @@ export const FloodEventsChart: React.FC<FloodEventsChartProps> = ({ events }) =>
     }));
 
   return (
-    <div className="card-farm p-5 space-y-3">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-        <div>
+    <div className="card-farm p-4 sm:p-5 space-y-3 min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+        <div className="min-w-0">
           <h4 className="text-sm font-extrabold text-[#25352D]">Grafik Riwayat Kejadian Banjir Besar</h4>
           <p className="text-xs text-[#66766C]">Jumlah Jiwa Terdampak Menurut Catatan Resmi BPBD & DIBI BNPB</p>
         </div>
-        <div className="flex items-center gap-3 text-xs font-semibold">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 text-xs font-semibold">
           <span className="flex items-center gap-1.5 text-[#16834B]">
             <span className="w-2.5 h-2.5 rounded-full bg-[#16834B]"></span> Jiwa Terdampak
           </span>
@@ -47,7 +47,7 @@ export const FloodEventsChart: React.FC<FloodEventsChartProps> = ({ events }) =>
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E3EAE5" />
             <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-            <YAxis tick={{ fontSize: 10 }} tickFormatter={(val) => `${(val / 1000).toFixed(0)}rb`} />
+            <YAxis tick={{ fontSize: 11 }} tickFormatter={(val) => `${(val / 1000).toFixed(0)}rb`} width={35} />
             <Tooltip
               formatter={(value: any, name: any) => [
                 `${Number(value).toLocaleString()} jiwa`,

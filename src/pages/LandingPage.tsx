@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Map, 
@@ -11,34 +11,11 @@ import {
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Smooth loading splash transition on first load
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 450);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#F0F5F2] flex justify-center py-0 sm:py-6 selection:bg-[#B9DFC5] selection:text-[#0D653A]">
       {/* Mobile-optimized Container matching the user's reference mockup */}
       <div className="w-full max-w-[440px] sm:max-w-[450px] min-h-screen sm:min-h-0 sm:rounded-3xl bg-white shadow-2xl border-x sm:border border-[#E2EAE4] flex flex-col justify-between relative overflow-hidden">
-        
-        {/* Splash screen while initial data hydrates */}
-        {isLoading && (
-          <div className="absolute inset-0 z-50 bg-[#0E5C34] flex flex-col items-center justify-center text-white transition-opacity duration-300">
-            <div className="w-24 h-24 rounded-3xl overflow-hidden shadow-2xl mb-4 animate-pulse border-2 border-white/40">
-              <img src="/logo.svg" alt="SIGAP" className="w-full h-full object-cover" />
-            </div>
-            <h1 className="text-2xl font-black tracking-wider text-white">SIGAP</h1>
-            <p className="text-xs text-[#B9DFC5] mt-1 font-medium">Kabupaten Aceh Utara</p>
-            <div className="w-32 h-1.5 bg-white/20 rounded-full mt-6 overflow-hidden">
-              <div className="h-full bg-[#B9DFC5] rounded-full animate-indeterminate" style={{ width: '60%' }} />
-            </div>
-          </div>
-        )}
 
         {/* TOP SECTION: Scenic Lush Landscape (Sky, mountains, meadows, river) */}
         <div className="relative w-full overflow-hidden select-none bg-[#D8EEDE]">
@@ -167,27 +144,49 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* ACTION BUTTONS (Exact pills matching user reference) */}
+          {/* ACTION BUTTONS (Exact pills aligned with 3-column CSS Grid: 24px minmax(0, 1fr) 24px) */}
           <div className="w-full space-y-2.5">
             {/* Primary Pill Button: Buka Dashboard Kebencanaan */}
             <button
+              type="button"
               onClick={() => navigate('/dashboard')}
-              className="w-full bg-[#0D653A] hover:bg-[#0A4E2D] text-white py-3.5 px-6 rounded-full font-bold text-xs sm:text-sm shadow-md shadow-[#0D653A]/20 flex items-center justify-between transition-all duration-150 active:scale-[0.98]"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '24px minmax(0, 1fr) 24px',
+                alignItems: 'center',
+              }}
+              className="w-full min-h-[48px] py-3 px-5 sm:px-6 rounded-full font-semibold text-sm text-white bg-[#0D653A] hover:bg-[#0A4E2D] border-2 border-transparent shadow-md shadow-[#0D653A]/20 transition-all duration-150 active:scale-[0.98]"
             >
-              <div className="flex items-center gap-3">
-                <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                <span>Buka Dashboard Kebencanaan</span>
-              </div>
-              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              <span className="w-6 h-6 flex items-center justify-center shrink-0">
+                <LayoutGrid className="w-5 h-5 text-white" />
+              </span>
+              <span className="text-center font-semibold text-sm leading-snug px-1 break-words">
+                Buka Dashboard Kebencanaan
+              </span>
+              <span className="w-6 h-6 flex items-center justify-center shrink-0">
+                <ArrowRight className="w-5 h-5 text-white" />
+              </span>
             </button>
 
             {/* Secondary Pill Button: Peta Interaktif GIS */}
             <button
+              type="button"
               onClick={() => navigate('/map')}
-              className="w-full bg-white hover:bg-[#F9FAF9] text-[#0D653A] border-2 border-[#0D653A] py-3 px-6 rounded-full font-bold text-xs sm:text-sm shadow-xs flex items-center justify-center gap-2.5 transition-all duration-150 active:scale-[0.98]"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '24px minmax(0, 1fr) 24px',
+                alignItems: 'center',
+              }}
+              className="w-full min-h-[48px] py-3 px-5 sm:px-6 rounded-full font-semibold text-sm text-[#0D653A] bg-white hover:bg-[#F9FAF9] border-2 border-[#0D653A] shadow-xs transition-all duration-150 active:scale-[0.98]"
             >
-              <Map className="w-4 h-4 sm:w-5 sm:h-5 text-[#0D653A]" />
-              <span>Peta Interaktif GIS</span>
+              <span className="w-6 h-6 flex items-center justify-center shrink-0">
+                <Map className="w-5 h-5 text-[#0D653A]" />
+              </span>
+              <span className="text-center font-semibold text-sm leading-snug px-1 break-words">
+                Peta Interaktif GIS
+              </span>
+              {/* Kolom kanan 24px kosong untuk menjaga teks tetap presisi di tengah tombol */}
+              <span className="w-6 h-6 shrink-0" aria-hidden="true" />
             </button>
           </div>
 

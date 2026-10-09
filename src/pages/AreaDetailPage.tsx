@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { dataService } from '../services/dataService';
 import { FloodMap } from '../components/map/FloodMap';
+import { AreaDetailSkeleton } from '../components/common/Skeleton';
 import type { KecamatanIndicator, PublicFacility, EvacuationPoint } from '../types';
 
 export const AreaDetailPage: React.FC = () => {
@@ -61,9 +62,17 @@ export const AreaDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-8 text-center max-w-md mx-auto space-y-3">
-        <div className="w-8 h-8 border-4 border-[#16834B] border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-xs text-[#66766C]">Memuat data spasial kecamatan...</p>
+      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => navigate('/areas')}
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#66766C] hover:text-[#0D653A] bg-white px-3 py-1.5 rounded-full border border-[#E3EAE5]"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Kembali ke Wilayah</span>
+          </button>
+        </div>
+        <AreaDetailSkeleton />
       </div>
     );
   }

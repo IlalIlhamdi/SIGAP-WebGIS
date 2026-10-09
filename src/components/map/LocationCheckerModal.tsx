@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
-  MapPin, 
   X, 
   AlertTriangle, 
-  ShieldCheck, 
   Compass, 
-  ExternalLink, 
   Navigation2,
   CheckCircle2,
   Building2,
-  HelpCircle,
-  Loader2
+  Crosshair
 } from 'lucide-react';
 import { dataService } from '../../services/dataService';
+import { getCurrentCoordinates } from '../../lib/native/geolocation';
+import { registerBackButtonHandler } from '../../lib/native/back-button';
 import { useNavigate } from 'react-router-dom';
+import { LoadingSpinner } from '../common/LoadingSpinner';
 
 interface LocationCheckerModalProps {
   isOpen: boolean;
@@ -24,14 +24,46 @@ export const LocationCheckerModal: React.FC<LocationCheckerModalProps> = ({ isOp
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<any | null>(null);
+  const [accuracy, setAccuracy] = useState<number | null>(null);
   const navigate = useNavigate();
+
+  // Dismiss on Android hardware back button
+  useEffect(() => {
+    if (isOpen) {
+      return registerBackButtonHandler(() => {
+        onClose();
+        return true;
+      }, 15);
+    }
+  }, [isOpen, onClose]);
+
+  // Handle body scroll lock
+  useEffect(() => {
+    if (!isOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen]);
+
+  // Handle Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  const runLocationCheck = async (lat: number, lng: number) => {
+  const runLocationCheck = async (lat: number, lng: number, acc?: number) => {
     setLoading(true);
     setError(null);
     setResult(null);
+    setAccuracy(acc || null);
 
     try {
       const checkResult = await dataService.checkUserLocation(lat, lng);
@@ -43,29 +75,19 @@ export const LocationCheckerModal: React.FC<LocationCheckerModalProps> = ({ isOp
     }
   };
 
-  const handleGetCurrentGPS = () => {
-    if (!navigator.geolocation) {
-      setError('Peramban web Anda tidak mendukung Geolocation API.');
-      return;
-    }
-
+  const handleGetCurrentGPS = async () => {
     setLoading(true);
     setError(null);
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        runLocationCheck(pos.coords.latitude, pos.coords.longitude);
-      },
-      (err) => {
-        setLoading(false);
-        if (err.code === err.PERMISSION_DENIED) {
-          setError('Izin akses lokasi ditolak. Izinkan akses lokasi untuk menggunakan fitur ini, atau gunakan titik demonstrasi Aceh Utara di bawah ini.');
-        } else {
-          setError(`Gagal mendapatkan sinyal GPS: ${err.message}. Silakan gunakan titik demonstrasi wilayah Aceh Utara.`);
-        }
-      },
-      { timeout: 10000, enableHighAccuracy: true }
-    );
+    const { coords, error: locError } = await getCurrentCoordinates();
+
+    if (locError || !coords) {
+      setLoading(false);
+      setError(locError?.message || 'Tidak dapat mendeteksi koordinat GPS.');
+      return;
+    }
+
+    runLocationCheck(coords.latitude, coords.longitude, coords.accuracy);
   };
 
   // Demo locations inside Aceh Utara for LKTI presentation testing
@@ -77,51 +99,62 @@ export const LocationCheckerModal: React.FC<LocationCheckerModalProps> = ({ isOp
     { name: "Luar Wilayah (Banda Aceh)", lat: 5.5483, lng: 95.3238, note: "Uji Validasi Di Luar Aceh Utara" }
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-[#E3EAE5] overflow-hidden max-h-[90vh] flex flex-col">
+  return createPortal(
+    <div 
+      className="fixed inset-0 z-60 flex items-center justify-center p-3 min-[360px]:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+      onClick={onClose}
+    >
+      <div 
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="location-checker-title"
+        className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-[#E3EAE5] overflow-hidden max-h-[90vh] max-h-[90dvh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="p-5 border-b border-[#E3EAE5] flex items-center justify-between bg-gradient-to-r from-[#16834B] to-[#0D653A] text-white">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
+        <div className="p-4 sm:p-5 border-b border-[#E3EAE5] flex items-center justify-between bg-gradient-to-r from-[#16834B] to-[#0D653A] text-white">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0">
               <Compass className="w-5 h-5 text-white" />
             </div>
-            <div>
-              <h3 className="font-extrabold text-base leading-tight">Periksa Lokasi Saya</h3>
-              <p className="text-xs text-[#B9DFC5]">Penapisan Geospasial Wilayah Ancaman Banjir</p>
+            <div className="min-w-0">
+              <h3 id="location-checker-title" className="font-extrabold text-base leading-tight">Periksa Lokasi Saya</h3>
+              <p className="text-xs text-[#B9DFC5] truncate">Penapisan Geospasial Wilayah Ancaman Banjir</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition"
+            aria-label="Tutup modal periksa lokasi"
+            className="w-10 h-10 min-w-[48px] min-h-[48px] rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Body Content */}
-        <div className="p-6 overflow-y-auto space-y-5">
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-4 sm:space-y-5">
           {/* Main GPS Trigger */}
           <div className="text-center space-y-3">
-            <p className="text-xs text-[#66766C]">
+            <p className="text-xs sm:text-sm text-[#66766C] leading-relaxed">
               Sistem akan membaca titik koordinat perangkat Anda dan melakukan analisis penapisan spasial 
               (<em>point-in-polygon</em>) terhadap batas administrasi dan indeks bahaya banjir BNPB InaRISK Kabupaten Aceh Utara.
             </p>
 
             <button
+              type="button"
               onClick={handleGetCurrentGPS}
               disabled={loading}
-              className="pill-btn w-full bg-[#16834B] hover:bg-[#0D653A] text-white py-3.5 text-sm shadow-md shadow-[#16834B]/20 disabled:opacity-50"
+              className="pill-btn min-h-[48px] w-full bg-[#16834B] hover:bg-[#0D653A] text-white py-3 px-4 text-sm font-bold shadow-md shadow-[#16834B]/20 disabled:opacity-50 justify-center active:scale-[0.98] transition-all"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>Memproses Analisis Geospasial...</span>
+                  <LoadingSpinner size="sm" color="white" />
+                  <span>Mencari lokasi…</span>
                 </>
               ) : (
                 <>
-                  <Navigation2 className="w-5 h-5" />
-                  <span>Deteksi Posisi GPS Saya Sekarang</span>
+                  <Navigation2 className="w-5 h-5 shrink-0" />
+                  <span className="leading-tight break-words">Deteksi Posisi GPS Saya Sekarang</span>
                 </>
               )}
             </button>
@@ -130,15 +163,15 @@ export const LocationCheckerModal: React.FC<LocationCheckerModalProps> = ({ isOp
           {/* LKTI Quick Tester Pills */}
           <div className="bg-[#F4F7F5] p-3.5 rounded-2xl border border-[#E3EAE5]">
             <p className="text-[11px] font-bold text-[#25352D] mb-2 flex items-center gap-1.5">
-              <span>Uji Coba Titik Lokasi LKTI:</span>
-              <span className="text-[10px] text-[#66766C] font-normal">(Pilihan demonstrasi tanpa GPS fisik)</span>
+              <span>Alternatif Titik Demonstrasi Aceh Utara:</span>
+              <span className="text-[10px] text-[#66766C] font-normal">(Tanpa sinyal GPS fisik)</span>
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {demoLocations.map((loc, idx) => (
                 <button
                   key={idx}
                   onClick={() => runLocationCheck(loc.lat, loc.lng)}
-                  className="text-left p-2 rounded-xl bg-white border border-[#E3EAE5] hover:border-[#16834B] hover:bg-[#E8F5E9]/50 transition text-xs"
+                  className="text-left p-2.5 rounded-xl bg-white border border-[#E3EAE5] hover:border-[#16834B] hover:bg-[#E8F5E9]/50 transition text-xs"
                 >
                   <p className="font-bold text-[#25352D] truncate">{loc.name}</p>
                   <p className="text-[10px] text-[#66766C] truncate">{loc.note}</p>
@@ -150,8 +183,11 @@ export const LocationCheckerModal: React.FC<LocationCheckerModalProps> = ({ isOp
           {/* Error Message */}
           {error && (
             <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5">
-              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
-              <span>{error}</span>
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-red-600" />
+              <div className="space-y-1">
+                <span className="font-bold block">Gagal Membaca Lokasi</span>
+                <span>{error}</span>
+              </div>
             </div>
           )}
 
@@ -188,6 +224,13 @@ export const LocationCheckerModal: React.FC<LocationCheckerModalProps> = ({ isOp
                       </span>
                     )}
                   </div>
+
+                  {accuracy && (
+                    <div className="flex items-center gap-1.5 text-[11px] text-[#0D653A] bg-emerald-50 px-2.5 py-1 rounded-lg">
+                      <Crosshair className="w-3.5 h-3.5 text-[#16834B]" />
+                      <span>Akurasi Sensor GPS: ±{Math.round(accuracy)} meter</span>
+                    </div>
+                  )}
 
                   {/* Scientific Indicators */}
                   {result.indicator ? (
@@ -273,6 +316,7 @@ export const LocationCheckerModal: React.FC<LocationCheckerModalProps> = ({ isOp
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

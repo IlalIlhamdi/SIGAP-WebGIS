@@ -243,13 +243,25 @@ export const EducationPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {emergencyContacts.map((c, i) => (
-            <div key={i} className="p-3.5 rounded-2xl bg-[#F4F7F5] border border-[#E3EAE5] space-y-1">
-              <span className="text-[10px] text-[#66766C] block uppercase font-bold">{c.type}</span>
-              <h4 className="text-xs font-extrabold text-[#25352D]">{c.agency}</h4>
-              <p className="text-sm font-black text-[#0D653A] tracking-wider pt-1">{c.phone}</p>
-            </div>
-          ))}
+          {emergencyContacts.map((c, i) => {
+            const cleanPhone = c.phone.split('/')[0].trim().replace(/[^0-9+]/g, '');
+            return (
+              <div key={i} className="p-3.5 rounded-2xl bg-[#F4F7F5] border border-[#E3EAE5] space-y-2 flex flex-col justify-between">
+                <div className="space-y-1">
+                  <span className="text-[10px] text-[#66766C] block uppercase font-bold">{c.type}</span>
+                  <h4 className="text-xs font-extrabold text-[#25352D]">{c.agency}</h4>
+                  <p className="text-sm font-black text-[#0D653A] tracking-wider pt-0.5">{c.phone}</p>
+                </div>
+                <a
+                  href={`tel:${cleanPhone}`}
+                  className="pill-btn w-full bg-[#16834B] hover:bg-[#0D653A] text-white py-2 text-xs font-bold gap-1.5 touch-target-48 mt-1"
+                >
+                  <PhoneCall className="w-3.5 h-3.5" />
+                  <span>Panggil Sekarang</span>
+                </a>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

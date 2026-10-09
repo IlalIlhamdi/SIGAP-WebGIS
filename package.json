@@ -8,9 +8,21 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "test": "vitest run",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cap:sync": "npm run build && npx cap sync",
+    "cap:copy": "npm run build && npx cap copy",
+    "cap:open": "npx cap open android",
+    "cap:run": "npx cap run android",
+    "android:build": "npm run cap:sync && cd android && .\\gradlew.bat assembleDebug"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/camera": "^8.2.5",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/geolocation": "^8.2.3",
+    "@capacitor/network": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.4",
     "@supabase/supabase-js": "^2.117.3",
     "@tailwindcss/vite": "^4.3.3",
     "@turf/turf": "^7.4.0",
@@ -31,6 +43,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^24.13.3",

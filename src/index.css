@@ -27,6 +27,32 @@ body {
   overflow-x: hidden;
 }
 
+/* Safe area insets utilities for Android edge-to-edge display */
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pl-safe {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+.pr-safe {
+  padding-right: env(safe-area-inset-right, 0px);
+}
+.top-safe {
+  top: env(safe-area-inset-top, 0px);
+}
+.bottom-safe {
+  bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Android touch target accessibility (min 48dp / 48px) */
+.touch-target-48 {
+  min-height: 48px;
+  min-width: 48px;
+}
+
 /* Leaflet map customization */
 .leaflet-container {
   font-family: var(--font-sans) !important;
@@ -36,9 +62,28 @@ body {
   z-index: 10;
 }
 
-/* Sembunyikan watermark / tulisan Leaflet & OpenStreetMap */
+/* Leaflet attribution styling - clean, compact, accessible, mobile-friendly */
 .leaflet-control-attribution {
-  display: none !important;
+  display: block !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(4px);
+  padding: 2px 8px !important;
+  font-size: 10px !important;
+  color: #475569 !important;
+  border-radius: 8px 0 0 0;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.06);
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.leaflet-control-attribution a {
+  color: #0D653A !important;
+  text-decoration: none;
+  font-weight: 600;
+}
+.leaflet-control-attribution a:hover {
+  text-decoration: underline;
 }
 
 .leaflet-popup-content-wrapper {
@@ -203,4 +248,32 @@ body {
 .animate-lightning-flash {
   animation: lightningFlashAnim 5s ease-out infinite;
 }
+
+/* Skeleton Loading Shimmer Animation */
+@keyframes shimmerAnim {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmerAnim 1.75s ease-in-out infinite;
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer,
+  .animate-spin,
+  .animate-pulse,
+  .animate-rain-drop,
+  .animate-cloud-drift,
+  .animate-lightning-flash {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 

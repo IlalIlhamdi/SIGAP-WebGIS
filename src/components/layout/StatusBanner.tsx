@@ -1,9 +1,26 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { ShieldCheck, AlertTriangle } from 'lucide-react';
+import { AlertTriangle, WifiOff, Clock } from 'lucide-react';
 
 export const StatusBanner: React.FC = () => {
-  const { isSimulationMode, setIsSimulationMode } = useApp();
+  const { isSimulationMode, setIsSimulationMode, isOnline, lastSyncTime } = useApp();
+
+  if (!isOnline) {
+    return (
+      <div className="bg-amber-600 text-white px-4 py-2 text-xs font-semibold flex items-center justify-between shadow-sm sticky top-0 z-50">
+        <div className="flex items-center gap-2 max-w-7xl mx-auto w-full">
+          <WifiOff className="w-4 h-4 shrink-0 text-amber-200" />
+          <span className="flex-1">
+            <strong>MODE OFFLINE AKTIF</strong> — Menampilkan arsip data lokal (Edukasi, Posko & Batas Wilayah tetap berfungsi).
+          </span>
+          <div className="hidden sm:flex items-center gap-1 text-[11px] text-amber-100 shrink-0">
+            <Clock className="w-3.5 h-3.5" />
+            <span>Cache: {lastSyncTime}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isSimulationMode) {
     return (
@@ -24,21 +41,5 @@ export const StatusBanner: React.FC = () => {
     );
   }
 
-  return (
-    <div className="bg-[#0D653A] text-white px-4 py-1.5 text-xs font-medium flex items-center justify-between border-b border-[#16834B]">
-      <div className="flex items-center justify-between max-w-7xl mx-auto w-full">
-        <div className="flex items-center gap-2 truncate">
-          <ShieldCheck className="w-4 h-4 text-[#B9DFC5] shrink-0" />
-          <span className="truncate">
-            <span className="font-bold text-[#B9DFC5]">DATA RESMI TERVERIFIKASI</span> — InaRISK BNPB • BIG • BPS • BMKG • BPBD Aceh Utara
-          </span>
-        </div>
-        <div className="hidden sm:flex items-center gap-3 text-[11px] text-emerald-100 shrink-0">
-          <span>KDPKAB: 11.08</span>
-          <span>•</span>
-          <span>Wilayah: Kab. Aceh Utara, Aceh</span>
-        </div>
-      </div>
-    </div>
-  );
+  return null;
 };

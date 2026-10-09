@@ -1,27 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FileText, 
   PlusCircle, 
   Search, 
-  Filter, 
-  MapPin, 
   Clock, 
-  CheckCircle2, 
-  AlertCircle, 
   ShieldCheck,
   Eye,
-  Camera
+  RefreshCw,
+  X,
+  WifiOff
 } from 'lucide-react';
 import { dataService } from '../services/dataService';
+import { useApp } from '../context/AppContext';
+import { registerBackButtonHandler } from '../lib/native/back-button';
 import type { FloodReportItem } from '../types';
 
 export const ReportsHistoryPage: React.FC = () => {
+  const { isOnline } = useApp();
   const [reports, setReports] = useState<FloodReportItem[]>(() => dataService.getReports());
   const [statusFilter, setStatusFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const navigate = useNavigate();
+
+  // Dismiss photo on Android back button
+  useEffect(() => {
+    if (selectedPhoto) {
+      return registerBackButtonHandler(() => {
+        setSelectedPhoto(null);
+        return true;
+      }, 15);
+    }
+  }, [selectedPhoto]);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const synced = await dataService.syncReportsFromSupabase();
+      setReports(synced);
+    } catch (e) {
+      console.warn("Refresh reports error:", e);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const filtered = reports.filter(r => {
     const matchStatus = statusFilter === 'all' || r.status.toLowerCase() === statusFilter.toLowerCase();
@@ -50,14 +74,36 @@ export const ReportsHistoryPage: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => navigate('/reports/new')}
-          className="pill-btn bg-[#16834B] hover:bg-[#0D653A] text-white px-5 py-2.5 text-xs sm:text-sm font-bold shadow-md shadow-[#16834B]/20 shrink-0"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>Kirim Laporan Banjir Baru</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="pill-btn bg-white hover:bg-slate-100 text-[#0D653A] border border-[#B9DFC5] px-3.5 py-2 text-xs font-bold shadow-xs shrink-0 touch-target-48 disabled:opacity-50"
+            title="Sinkronkan dengan Cloud BPBD"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Memperbarui…' : 'Segarkan Data'}</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/reports/new')}
+            className="pill-btn bg-[#16834B] hover:bg-[#0D653A] text-white px-4 py-2 text-xs sm:text-sm font-bold shadow-md shadow-[#16834B]/20 shrink-0 touch-target-48"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>Kirim Laporan Baru</span>
+          </button>
+        </div>
       </div>
+
+      {/* Offline Notice if disconnected */}
+      {!isOnline && (
+        <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-800 flex items-start gap-2.5">
+          <WifiOff className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+          <span>
+            <strong>Pemberitahuan Offline:</strong> Saat ini aplikasi menampilkan data laporan yang tersimpan di penyimpanan lokal perangkat ini. Hubungkan perangkat ke internet dan tekan tombol "Segarkan Data" untuk mengambil pembaruan terkini dari server BPBD.
+          </span>
+        </div>
+      )}
 
       {/* Verification Notice */}
       <div className="p-4 rounded-2xl bg-slate-100 border border-[#E3EAE5] text-xs text-[#25352D] flex items-start gap-2.5">
@@ -76,7 +122,7 @@ export const ReportsHistoryPage: React.FC = () => {
             placeholder="Cari kecamatan, gampong, atau kode laporan..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#F4F7F5] border border-[#E3EAE5] rounded-full pl-9 pr-4 py-2 text-xs md:text-sm outline-none focus:border-[#16834B] focus:bg-white transition"
+            className="w-full bg-[#F4F7F5] border border-[#E3EAE5] rounded-full pl-9 pr-4 py-2.5 text-xs md:text-sm outline-none focus:border-[#16834B] focus:bg-white transition"
           />
         </div>
 
@@ -86,7 +132,7 @@ export const ReportsHistoryPage: React.FC = () => {
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 transition ${
+              className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition touch-target-48 ${
                 statusFilter === st 
                   ? 'bg-[#16834B] text-white' 
                   : 'bg-[#F4F7F5] text-[#25352D] hover:bg-slate-200'
@@ -142,7 +188,7 @@ export const ReportsHistoryPage: React.FC = () => {
               {rep.photo_url && (
                 <div 
                   onClick={() => setSelectedPhoto(rep.photo_url!)}
-                  className="relative rounded-xl overflow-hidden h-32 border border-[#E3EAE5] cursor-pointer group"
+                  className="relative rounded-xl overflow-hidden h-32 border border-[#E3EAE5] cursor-pointer group bg-black/5"
                 >
                   <img 
                     src={rep.photo_url} 
@@ -181,18 +227,25 @@ export const ReportsHistoryPage: React.FC = () => {
         </div>
       )}
 
-      {/* Photo Modal */}
+      {/* Enlarged Photo Modal */}
       {selectedPhoto && (
         <div 
           onClick={() => setSelectedPhoto(null)}
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-xs"
+          className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 backdrop-blur-xs animate-in fade-in duration-200"
         >
-          <div className="max-w-2xl w-full bg-white rounded-2xl overflow-hidden p-2">
-            <img src={selectedPhoto} alt="Bukti Foto" className="w-full max-h-[80vh] object-contain rounded-xl" />
-            <div className="text-center py-2">
+          <div className="max-w-2xl w-full bg-white rounded-2xl overflow-hidden p-3 space-y-3 relative">
+            <button
+              onClick={() => setSelectedPhoto(null)}
+              aria-label="Tutup foto"
+              className="absolute top-4 right-4 bg-black/60 text-white rounded-full p-1.5 hover:bg-black/80 transition touch-target-48"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <img src={selectedPhoto} alt="Bukti Foto Banjir" className="w-full max-h-[75vh] object-contain rounded-xl bg-black/5" />
+            <div className="text-center pt-1">
               <button 
                 onClick={() => setSelectedPhoto(null)}
-                className="pill-btn bg-[#16834B] text-white px-4 py-1.5 text-xs font-bold"
+                className="pill-btn bg-[#16834B] text-white px-5 py-2 text-xs font-bold touch-target-48"
               >
                 Tutup
               </button>

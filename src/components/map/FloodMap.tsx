@@ -11,25 +11,54 @@ import L from 'leaflet';
 import { 
   Maximize2, 
   RotateCcw, 
-  Navigation, 
-  Info, 
-  ChevronRight, 
-  ShieldCheck, 
-  AlertTriangle,
-  Building2,
-  Waves,
-  CloudRain
+  CloudRain,
+  Compass,
+  ChevronRight
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { dataService } from '../../services/dataService';
 import { MapLegend } from './MapLegend';
 import { MapLegendBar } from './MapLegendBar';
 import { LayerControls } from './LayerControls';
-import { useNavigate } from 'react-router-dom';
+import { MobileMapSheet } from './MobileMapSheet';
+import { MapLoadingIndicator } from '../common/MapLoadingIndicator';
+import { MapPlaceholder } from '../common/Skeleton';
 
 // Center of Kabupaten Aceh Utara
 const ACEH_UTARA_CENTER: [number, number] = [5.044, 97.22];
 const DEFAULT_ZOOM = 10;
+
+// Coordinate lookup for Aceh Utara kecamatan
+const KECAMATAN_COORDS: Record<string, [number, number]> = {
+  'matangkuli': [5.0064, 97.2621],
+  'pirak timur': [4.9652, 97.2882],
+  'tanah luas': [5.0312, 97.2285],
+  'samudera': [5.1274, 97.2181],
+  'lhoksukon': [5.0441, 97.3188],
+  'baktiya': [5.0833, 97.4167],
+  'baktiya barat': [5.1167, 97.3833],
+  'syamtalira aron': [5.0833, 97.2167],
+  'syamtalira bayu': [5.1167, 97.1833],
+  'meurah mulia': [5.0500, 97.1667],
+  'kuta makmur': [5.0833, 97.0500],
+  'simpang keuramat': [5.0667, 97.0833],
+  'sawang': [5.0112, 96.8852],
+  'nisam': [5.1000, 96.9833],
+  'nisam antara': [5.0167, 96.9500],
+  'banda baro': [5.1333, 97.0167],
+  'dewantara': [5.2333, 97.0167],
+  'muara batu': [5.2333, 96.9500],
+  'geuredong pase': [4.9333, 97.1167],
+  'paya bakong': [4.9500, 97.2000],
+  'nibong': [5.0500, 97.2500],
+  'cot girek': [4.9833, 97.3833],
+  'langkahan': [4.9500, 97.5167],
+  'seunuddon': [5.1667, 97.4667],
+  'tanah pasir': [5.1167, 97.2667],
+  'lapang': [5.1667, 97.2833],
+  'tanah jambo aye': [5.1333, 97.5000]
+};
 
 // Fix standard Leaflet default marker icons issue in Vite bundlers
 const createCustomIcon = (bgColor: string, text: string) => {
@@ -69,6 +98,24 @@ const MapController: React.FC<{
   const map = useMap();
 
   useEffect(() => {
+    // Invalidate size on initial layout and orientation/container changes
+    map.invalidateSize();
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 250);
+
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [map]);
+
+  useEffect(() => {
     if (resetTrigger > 0) {
       map.flyTo(ACEH_UTARA_CENTER, DEFAULT_ZOOM, { duration: 1.2 });
     }
@@ -83,6 +130,16 @@ const MapController: React.FC<{
   return null;
 };
 
+// Event listener for map readiness and robust basemap tile loading lifecycle
+const MapEventsListener: React.FC<{ onMapReady: () => void }> = ({ onMapReady }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.whenReady(onMapReady);
+    return () => { map.off('load', onMapReady); };
+  }, [map, onMapReady]);
+  return null;
+};
+
 interface FloodMapProps {
   initialKecamatanId?: string;
   onSelectKecamatan?: (k: any) => void;
@@ -93,7 +150,7 @@ interface FloodMapProps {
 export const FloodMap: React.FC<FloodMapProps> = ({ 
   initialKecamatanId, 
   onSelectKecamatan,
-  heightClass = "h-[calc(100vh-140px)]",
+  heightClass = "h-[calc(100dvh-13.5rem)] min-h-[380px]",
   showLegendBelow = true
 }) => {
   const { 
@@ -115,15 +172,24 @@ export const FloodMap: React.FC<FloodMapProps> = ({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [mapTarget, setMapTarget] = useState<[number, number] | null>(null);
   const [weatherEffect, setWeatherEffect] = useState<'none' | 'rain' | 'storm'>('none');
+  const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
+
+  // Discrete loading and readiness states
+  const [isMapReady, setIsMapReady] = useState(false);
+  const [isLayersLoading, setIsLayersLoading] = useState(true);
+  const [isTileLoading, setIsTileLoading] = useState(false);
+  const [tileError, setTileError] = useState(false);
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Load geospatial datasets
+  // Load geospatial datasets safely (mandatory vs optional layers)
   useEffect(() => {
+    let active = true;
     async function loadGIS() {
+      setIsLayersLoading(true);
       try {
-        const [boundary, kec, rivers, fac, evac] = await Promise.all([
+        const [boundaryRes, kecRes, riversRes, facRes, evacRes] = await Promise.allSettled([
           dataService.getBoundaryGeoJSON(),
           dataService.getKecamatanGeoJSON(),
           dataService.getRiversGeoJSON(),
@@ -131,26 +197,53 @@ export const FloodMap: React.FC<FloodMapProps> = ({
           dataService.getEvacuationPointsGeoJSON()
         ]);
 
-        setBoundaryGeo(boundary);
-        setKecamatanGeo(kec);
-        setRiversGeo(rivers);
-        if (fac?.features) setFacilities(fac.features);
-        if (evac?.features) setEvacuations(evac.features);
+        if (!active) return;
+
+        // Mandatory administrative layers
+        if (boundaryRes.status === 'fulfilled') setBoundaryGeo(boundaryRes.value);
+        if (kecRes.status === 'fulfilled') setKecamatanGeo(kecRes.value);
+
+        // Optional auxiliary layers (failure of one does not drop others)
+        if (riversRes.status === 'fulfilled') setRiversGeo(riversRes.value);
+        if (facRes.status === 'fulfilled' && facRes.value?.features) setFacilities(facRes.value.features);
+        if (evacRes.status === 'fulfilled' && evacRes.value?.features) setEvacuations(evacRes.value.features);
+
         setReports(dataService.getReports());
       } catch (e) {
         console.error("Error loading map layers:", e);
+      } finally {
+        if (active) setIsLayersLoading(false);
       }
     }
     loadGIS();
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Sync initial kecamatan selection if provided
   useEffect(() => {
     if (initialKecamatanId && allKecamatan.length > 0) {
       const match = allKecamatan.find(k => k.id === initialKecamatanId || k.name.toLowerCase() === initialKecamatanId.toLowerCase());
-      if (match) setSelectedKecamatan(match);
+      if (match) {
+        setSelectedKecamatan(match);
+        const coords = KECAMATAN_COORDS[match.name.toLowerCase()];
+        if (coords) {
+          setMapTarget(coords);
+        }
+      }
     }
   }, [initialKecamatanId, allKecamatan, setSelectedKecamatan]);
+
+  // Fly to target coordinates when selectedKecamatan changes
+  useEffect(() => {
+    if (selectedKecamatan) {
+      const coords = KECAMATAN_COORDS[selectedKecamatan.name.toLowerCase()];
+      if (coords) {
+        setMapTarget(coords);
+      }
+    }
+  }, [selectedKecamatan]);
 
   // Polygon styling based on hazard level
   const getFeatureStyle = (feature: any) => {
@@ -270,14 +363,23 @@ export const FloodMap: React.FC<FloodMapProps> = ({
         center={ACEH_UTARA_CENTER}
         zoom={DEFAULT_ZOOM}
         scrollWheelZoom={true}
-        attributionControl={false}
+        attributionControl={true}
         className="w-full h-full"
       >
         <MapController targetCoord={mapTarget} resetTrigger={resetCount} />
+        <MapEventsListener 
+          onMapReady={() => setIsMapReady(true)} 
+        />
 
-        {/* High performance OpenStreetMap Basemap without attribution text */}
+        {/* High performance OpenStreetMap Basemap with clean responsive attribution */}
         <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> | InaRISK BNPB'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          eventHandlers={{
+            loading: () => { setIsTileLoading(true); setTileError(false); },
+            load: () => setIsTileLoading(false),
+            tileerror: () => setTileError(true),
+          }}
           maxZoom={18}
         />
 
@@ -419,6 +521,23 @@ export const FloodMap: React.FC<FloodMapProps> = ({
         ))}
       </MapContainer>
 
+      {/* Initial Map Instance Placeholder before ready (Zero remounts!) */}
+      {!isMapReady && (
+        <div className="absolute inset-0 z-30 pointer-events-none transition-opacity duration-300">
+          <MapPlaceholder heightClass="h-full" label="Menyiapkan peta…" />
+        </div>
+      )}
+
+      {/* Discrete Non-Blocking Layer & Tile Loading Indicator */}
+      <MapLoadingIndicator isLoading={isLayersLoading || isTileLoading} />
+
+      {/* Basemap Tile Offline / Error Notice */}
+      {tileError && (
+        <div className="absolute top-3 left-14 z-20 bg-amber-600/90 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-[11px] font-bold shadow-md flex items-center gap-1.5 border border-amber-300 pointer-events-auto">
+          <span>Peta dasar (OSM) offline. Layer lokal SIGAP tetap aktif.</span>
+        </div>
+      )}
+
       {/* Floating Map Controls Top-Right */}
       <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
         <button
@@ -501,12 +620,30 @@ export const FloodMap: React.FC<FloodMapProps> = ({
         <LayerControls />
       </div>
 
-      {/* Floating Legend (Bottom-Left) */}
+      {/* Floating Legend (Bottom-Left Desktop) */}
       <div className="absolute bottom-4 left-3 z-20 hidden md:block">
         <MapLegend 
           opacity={layerOpacity} 
           onOpacityChange={setLayerOpacity} 
         />
+      </div>
+
+      {/* Mobile Legend & Layer Sheet Trigger (Visible on Mobile Screens with >= 48dp Touch Target) */}
+      <div 
+        className={`absolute ${selectedKecamatan ? 'bottom-28' : 'bottom-3'} left-3 z-20 md:hidden transition-all duration-200`}
+      >
+        <button
+          type="button"
+          onClick={() => setIsMobileSheetOpen(true)}
+          aria-label="Buka Legenda dan Filter Lapisan Peta"
+          className="min-h-[48px] px-3.5 py-2.5 rounded-2xl bg-white/95 hover:bg-white text-[#0D653A] font-extrabold text-xs shadow-lg border border-[#E3EAE5] flex items-center gap-2 active:scale-95 transition backdrop-blur-md cursor-pointer"
+        >
+          <div className="w-6 h-6 rounded-lg bg-[#E8F5E9] text-[#16834B] flex items-center justify-center shrink-0">
+            <Compass className="w-4 h-4 text-[#0D653A]" />
+          </div>
+          <span className="text-[13px] font-extrabold tracking-tight">Legenda & Lapisan</span>
+          <span className="w-2 h-2 rounded-full bg-[#16834B] animate-pulse" />
+        </button>
       </div>
 
       {/* Selected Kecamatan Bottom Floater (Mobile & Quick Summary) */}
@@ -538,9 +675,16 @@ export const FloodMap: React.FC<FloodMapProps> = ({
       )}
     </div>
 
+    {/* Collapsible Mobile Bottom Panel / Sheet for Android */}
+    <MobileMapSheet
+      isOpen={isMobileSheetOpen}
+      onClose={() => setIsMobileSheetOpen(false)}
+      onSelectKecamatan={onSelectKecamatan}
+    />
+
     {/* Komponen Keterangan Peta (Map Legend) Tepat di Bawah Peta Interaktif SIGAP */}
     {showLegendBelow && !isFullscreen && (
-      <MapLegendBar />
+      <MapLegendBar onSelectKecamatan={onSelectKecamatan} />
     )}
   </div>
   );

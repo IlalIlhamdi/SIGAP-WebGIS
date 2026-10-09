@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { 
   Database, 
   ExternalLink, 
@@ -7,44 +7,79 @@ import {
   Calendar, 
   FileCode2, 
   Scale, 
-  AlertTriangle,
-  BookOpen
+  AlertTriangle, 
+  BookOpen,
+  RefreshCw,
+  AlertCircle
 } from 'lucide-react';
 import { dataService } from '../services/dataService';
+import { ListCardSkeleton } from '../components/common/Skeleton';
+import { InlineRefreshIndicator } from '../components/common/InlineRefreshIndicator';
 import type { DataSourceMeta } from '../types';
 
 export const DataSourcesPage: React.FC = () => {
   const [sources, setSources] = useState<DataSourceMeta[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadSources = useCallback(async (isRefresh = false) => {
+    if (isRefresh) {
+      setIsRefreshing(true);
+    } else {
+      setLoading(true);
+    }
+    setError(null);
+
+    try {
+      const meta = await dataService.getDataSourcesMeta();
+      setSources(meta || []);
+      setError(null);
+    } catch (e: any) {
+      console.error(e);
+      setError(e?.message || "Gagal memuat katalog sumber data.");
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
+    }
+  }, []);
 
   useEffect(() => {
-    async function loadSources() {
-      try {
-        const meta = await dataService.getDataSourcesMeta();
-        setSources(meta);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    }
     loadSources();
-  }, []);
+  }, [loadSources]);
+
+  const isPending = loading && sources.length === 0;
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <div className="border-b border-[#E3EAE5] pb-4 space-y-1">
-        <div className="flex items-center gap-2 text-xs font-bold text-[#16834B]">
-          <Database className="w-4 h-4" />
-          <span>Integritas Ilmiah & Transparansi Data</span>
+      <div className="border-b border-[#E3EAE5] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#16834B]">
+            <Database className="w-4 h-4" />
+            <span>Integritas Ilmiah & Transparansi Data</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D653A] tracking-tight">
+            Sumber Data Resmi & Metodologi GIS
+          </h1>
+          <p className="text-xs sm:text-sm text-[#66766C]">
+            Katalog metadata dataset geospasial, lisensi penggunaan, dan batasan teknis aplikasi SIGAP 1.0.
+          </p>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D653A] tracking-tight">
-          Sumber Data Resmi & Metodologi GIS
-        </h1>
-        <p className="text-xs sm:text-sm text-[#66766C]">
-          Katalog metadata dataset geospasial, lisensi penggunaan, dan batasan teknis aplikasi SIGAP 1.0.
-        </p>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <InlineRefreshIndicator isRefreshing={isRefreshing} />
+          <button
+            type="button"
+            onClick={() => loadSources(true)}
+            disabled={isRefreshing || loading}
+            aria-label="Segarkan katalog sumber data"
+            className="pill-btn bg-white hover:bg-slate-50 text-[#0D653A] border border-[#B9DFC5] px-3.5 py-2 text-xs font-bold shadow-xs touch-target-48 disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Memperbarui…' : 'Segarkan'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Mandatory LKTI Academic Integrity Principle */}
@@ -58,54 +93,92 @@ export const DataSourcesPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Data Sources Grid */}
+      {/* Error state with retry */}
+      {error && (
+        <div 
+          role="alert"
+          className="p-4 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-800 flex items-center justify-between gap-3"
+        >
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <span>{error}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => loadSources(false)}
+            className="px-3 py-1.5 rounded-xl bg-white border border-red-300 font-bold text-red-700 hover:bg-red-50 flex items-center gap-1.5 shrink-0"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Coba Lagi</span>
+          </button>
+        </div>
+      )}
+
+      {/* Data Sources Grid: Skeletons vs Real Content */}
       <div className="space-y-4">
-        <h3 className="font-extrabold text-base text-[#25352D]">6 Sumber Data Resmi Terintegrasi</h3>
+        <h3 className="font-extrabold text-base text-[#25352D]">
+          {isPending ? 'Memuat Katalog Sumber Data…' : `${sources.length} Sumber Data Resmi Terintegrasi`}
+        </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {sources.map((ds) => (
-            <div key={ds.id} className="card-farm p-5 space-y-3 flex flex-col justify-between">
-              <div className="space-y-2">
-                <div className="flex items-start justify-between gap-2">
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
-                    {ds.status}
-                  </span>
-                  <span className="text-[10px] text-[#66766C] font-semibold">Tahun Rujukan: {ds.reference_year}</span>
-                </div>
-
-                <h4 className="text-base font-extrabold text-[#25352D] leading-snug">
-                  {ds.dataset_name}
-                </h4>
-
-                <div className="text-xs text-[#66766C] space-y-1">
-                  <p><strong>Instansi:</strong> <span className="text-[#0D653A] font-semibold">{ds.institution}</span></p>
-                  <p><strong>Sistem Koordinat (CRS):</strong> <span className="font-mono text-[#25352D]">{ds.crs}</span></p>
-                  <p><strong>Lisensi:</strong> {ds.license}</p>
-                  <p><strong>Akses Terakhir:</strong> {ds.accessed_at}</p>
-                </div>
-
-                <div className="pt-2 text-xs text-[#25352D] bg-[#F4F7F5] p-2.5 rounded-xl border border-[#E3EAE5]">
-                  <span className="text-[10px] text-[#66766C] font-bold block uppercase mb-0.5">Catatan Teknis:</span>
-                  <p className="leading-relaxed text-[11px]">{ds.notes}</p>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-[#E3EAE5] flex items-center justify-between text-xs">
-                <span className="text-[10px] font-mono text-[#66766C]">{ds.id}</span>
-                {ds.source_url && (
-                  <a
-                    href={ds.source_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-bold text-[#16834B] hover:underline text-xs"
-                  >
-                    <span>Kunjungi Portal Resmi</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                )}
-              </div>
+        <div 
+          aria-busy={loading}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          {isPending ? (
+            Array.from({ length: 4 }).map((_, idx) => (
+              <ListCardSkeleton key={idx} />
+            ))
+          ) : !loading && sources.length === 0 ? (
+            <div className="col-span-full p-8 text-center bg-white rounded-2xl border border-[#E3EAE5] space-y-2">
+              <Database className="w-8 h-8 text-slate-400 mx-auto" />
+              <h4 className="font-extrabold text-sm text-[#25352D]">Katalog Belum Tersedia</h4>
+              <p className="text-xs text-[#66766C]">Tidak ada metadata sumber data yang dapat ditampilkan saat ini.</p>
             </div>
-          ))}
+          ) : (
+            sources.map((ds) => (
+              <div key={ds.id} className="card-farm p-5 space-y-3 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                      {ds.status}
+                    </span>
+                    <span className="text-[10px] text-[#66766C] font-semibold">Tahun Rujukan: {ds.reference_year}</span>
+                  </div>
+
+                  <h4 className="text-base font-extrabold text-[#25352D] leading-snug">
+                    {ds.dataset_name}
+                  </h4>
+
+                  <div className="text-xs text-[#66766C] space-y-1">
+                    <p><strong>Instansi:</strong> <span className="text-[#0D653A] font-semibold">{ds.institution}</span></p>
+                    <p><strong>Sistem Koordinat (CRS):</strong> <span className="font-mono text-[#25352D]">{ds.crs}</span></p>
+                    <p><strong>Lisensi:</strong> {ds.license}</p>
+                    <p><strong>Akses Terakhir:</strong> {ds.accessed_at}</p>
+                  </div>
+
+                  <div className="pt-2 text-xs text-[#25352D] bg-[#F4F7F5] p-2.5 rounded-xl border border-[#E3EAE5]">
+                    <span className="text-[10px] text-[#66766C] font-bold block uppercase mb-0.5">Catatan Teknis:</span>
+                    <p className="leading-relaxed text-[11px]">{ds.notes}</p>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-[#E3EAE5] flex items-center justify-between text-xs">
+                  <span className="text-[10px] font-mono text-[#66766C]">{ds.id}</span>
+                  {ds.source_url && (
+                    <a
+                      href={ds.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 font-bold text-[#16834B] hover:underline text-xs"
+                    >
+                      <span>Kunjungi Portal Resmi</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

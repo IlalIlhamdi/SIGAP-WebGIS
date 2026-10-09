@@ -67,7 +67,7 @@ export const HazardDistributionChart: React.FC<HazardDistributionChartProps> = (
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <div className="flex gap-4 text-xs font-bold mt-1">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs font-bold mt-1">
           <span className="text-red-600">● {tinggiCount} Tinggi</span>
           <span className="text-amber-600">● {sedangCount} Sedang</span>
           <span className="text-emerald-600">● {rendahCount} Rendah</span>
@@ -75,10 +75,10 @@ export const HazardDistributionChart: React.FC<HazardDistributionChartProps> = (
       </div>
 
       {/* Bar ranking */}
-      <div className="card-farm p-4 md:col-span-2">
-        <div className="flex items-center justify-between mb-2">
+      <div className="card-farm p-4 md:col-span-2 min-w-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
           <h4 className="text-xs font-bold text-[#66766C] uppercase">Skor Indeks Bahaya Banjir (InaRISK 0-100)</h4>
-          <span className="text-[10px] text-[#66766C]">8 Kecamatan Tertinggi</span>
+          <span className="text-xs text-[#66766C]">8 Kecamatan Tertinggi</span>
         </div>
         <div className="w-full h-44">
           <ResponsiveContainer width="100%" height="100%">
